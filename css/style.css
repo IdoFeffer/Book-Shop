@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: aquamarine;
+}
+
+table {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+tbody {
+  background-color: #f2f2f2;
+}
+
+.book-list {
+  border: 1px solid black;
+}

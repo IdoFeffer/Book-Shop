@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book shop</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body onload="onInit()">
+    <h1>Book Shop</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>The Adventure of Lori Ipsi</td>
+          <td>120</td>
+          <td>
+            <button>Read</button>
+            <button>Update</button>
+            <button>Action</button>
+          </td>
+        </tr>
+        <tr>
+          <td>World Atlas</td>
+          <td>300</td>
+          <td>
+            <button>Read</button>
+            <button>Update</button>
+            <button>Action</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Zobra The Greek</td>
+          <td>87</td>
+          <td>
+            <button>Read</button>
+            <button>Update</button>
+            <button>Action</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="js/book.controller.js"></script>
+    <script src="js/services/book.service.js"></script>
+    <script src="js/services/util-service.js"></script>
+    <script src="js/services/storage-service.js"></script>
+  </body>
+</html>
