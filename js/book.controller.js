@@ -52,3 +52,26 @@ function onAddBook() {
   // Update the Dom:
   renderBooks()
 }
+
+function onRead(bookId) {
+  const book = gBooks.find((book) => book.id === bookId)
+  if (!book) return
+
+  document.querySelector(".book-details").innerHTML = `
+
+        <div class="book-detail">
+            <img src="${book.imgUrl || "default-cover.jpg"}"
+            alt="${book.title}"class="book-cover">
+            <div class="book-info">
+                <h2>${book.title}</h2>
+                <p><strong>Price:</strong> $${book.price}</p>
+                <p><strong>ID:</strong> ${book.id}</p>
+            </div>
+        </div>
+        `
+  document.querySelector("#modal").classList.remove("hidden")
+}
+
+function onCloseModal() {
+  document.querySelector(".modal").classList.add("hidden")
+}
