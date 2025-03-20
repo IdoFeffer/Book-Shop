@@ -38,3 +38,17 @@ function onUpdateBook(bookId) {
   updatePrice(bookId, newPrice)
   renderBooks()
 }
+
+function onAddBook() {
+  const newTitle = prompt("Enter new book")
+  const newPrice = +prompt("Enter new price:")
+
+  if (!newTitle || newPrice <= 0) {
+    alert("Please enter a valid title and a positive price.")
+    return
+  }
+  // Update the Model:
+  addBook(newTitle, newPrice)
+  // Update the Dom:
+  renderBooks()
+}

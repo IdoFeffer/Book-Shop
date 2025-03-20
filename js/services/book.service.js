@@ -18,8 +18,21 @@ function removeBook(bookId) {
 }
 
 function updatePrice(bookId, newPrice) {
-  const book = gBooks.find(book => book.id === bookId);
-  if (!book) return;
-  book.price = newPrice; 
+  const book = gBooks.find((book) => book.id === bookId)
+  if (!book) return
+  book.price = newPrice
 }
 
+function addBook(title, price) {
+  const add = _createBook(title, price)
+
+  gBooks.unshift(add)
+}
+
+function _createBook(title, price) {
+  return {
+    id: "t" + getRandomInt(100, 900),
+    title,
+    price,
+  }
+}
