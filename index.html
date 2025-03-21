@@ -6,10 +6,19 @@
     <title>Book shop</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  
+
   <body onload="onInit()">
     <h1>Book Shop</h1>
-    <button onclick="onAddBook()">Add book</button>
+
+    <section>
+      <input
+        class="filter"
+        oninput="onFilterBooks(this.value)"
+        type="text"
+        placeholder="book list by title"
+      />
+      <button class="clear" onclick="onClearFilter()">Clear</button>
+    </section>
 
     <table class="book-container">
       <thead>
@@ -21,6 +30,8 @@
       </thead>
       <tbody class="book-list"></tbody>
     </table>
+
+    <button onclick="onAddBook()">Add book</button>
 
     <div id="modal" class="modal hidden">
       <p class="book-details"></p>

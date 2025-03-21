@@ -1,15 +1,20 @@
 "use strict"
 
+var gFilterBy = ""
+
 function onInit() {
   _createBooks()
   renderBooks()
 }
 
 function renderBooks() {
-  const books = getBooks()
+  const books = getBooks().filter((book) =>
+    book.title.toLowerCase().includes(gFilterBy.toLowerCase())
+  )
+  // const books = getBooks()
   const elTableBody = document.querySelector(".book-list")
 
-  var strHTMLs = books.map(book => {
+  var strHTMLs = books.map((book) => {
     return `
           <tr>
               <td>${book.title}</td>
@@ -80,3 +85,15 @@ function onRead(bookId) {
 function onCloseModal() {
   document.querySelector(".modal").classList.add("hidden")
 }
+
+function onFilterBooks(filterTxt) {
+  gFilterBy = filterTxt
+  renderBooks()
+}
+
+function onClearFilter() {
+  gFilterBy = ""
+  document.querySelector(`input[type='text']`).value = ""
+  renderBooks()
+}
+
