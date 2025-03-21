@@ -27,6 +27,15 @@ function renderBooks() {
           </tr>`
   })
   elTableBody.innerHTML = strHTMLs.join("")
+
+  renderStat()
+}
+
+function renderStat() {
+
+  document.querySelector(".total-exp-books").innerText = getTotalExpBooksCount()
+  document.querySelector(".total-avg-books").innerText = getTotalAvgBooksCount() 
+  document.querySelector(".total-cheap-books").innerText = getTotalCheapBooksCount()
 }
 
 function onRemoveBook(bookId, ev) {
@@ -34,6 +43,7 @@ function onRemoveBook(bookId, ev) {
   // Update the Model:
   removeBook(bookId)
   // Update the Dom:
+  showUserMsg("Book was removed")
   renderBooks()
 }
 
@@ -42,12 +52,12 @@ function onUpdateBook(bookId) {
   if (!newPrice || newPrice === 0) return
 
   updatePrice(bookId, newPrice)
+
+  showUserMsg("Book was updated")
   renderBooks()
 }
 
 function onAddBook(ev) {
-  // ev.preventDefault()
-
   const newTitle = prompt("Enter new book")
   const newPrice = +prompt("Enter new price:")
 
@@ -60,6 +70,7 @@ function onAddBook(ev) {
   // Update the Model:
   addBook(newTitle, newPrice)
   // Update the Dom:
+  showUserMsg("Book was added")
   renderBooks()
 }
 
@@ -97,3 +108,12 @@ function onClearFilter() {
   renderBooks()
 }
 
+function showUserMsg(txt) {
+  const elMsg = document.querySelector(".user-msg")
+  elMsg.innerText = txt
+
+  elMsg.style.display = "block"
+  setTimeout(() => {
+    elMsg.style.display = "none"
+  }, 2000)
+}

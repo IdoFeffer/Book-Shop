@@ -14,7 +14,7 @@ function getBooks() {
 }
 
 function removeBook(bookId) {
-  const bookIdx = gBooks.findIndex((book) => book.id === bookId.toString() ) // bookId)
+  const bookIdx = gBooks.findIndex((book) => book.id === bookId.toString()) // bookId)
   if (bookIdx !== -1) gBooks.splice(bookIdx, 1)
   _saveBooks()
 }
@@ -57,3 +57,16 @@ function _createBook(title, price) {
 function _saveBooks() {
   saveToStorage(STORAGE_KEY, gBooks)
 }
+
+function getTotalExpBooksCount() {
+  return gBooks.filter(book => book.price > 200 ).length
+}
+
+function getTotalAvgBooksCount() {
+  return gBooks.filter(book => book.price >= 80 && book.price <= 200).length
+}
+
+function getTotalCheapBooksCount() {
+  return gBooks.filter(book => book.price <= 80).length
+}
+  

@@ -9,7 +9,7 @@ body {
 
 table {
   border: 1px solid black;
-  margin: 10px;
+  margin: 20px;
   padding: 10px;
   border-collapse: collapse;
 }
@@ -19,6 +19,9 @@ td {
   border: 1px solid black;
   padding: 8px;
   text-align: left;
+}
+th {
+  background-color: lightgreen;
 }
 
 tbody {
@@ -53,16 +56,28 @@ tbody {
 }
 
 .user-msg {
+  display: none; 
   position: fixed;
   top: 20px;
   left: 50%;
+
   transform: translateX(-50%);
-  background-color: #4caf50; /* ירוק */
+  background-color: #4caf50; 
   color: white;
+  font-weight: bold;
+
   padding: 10px 20px;
   border-radius: 5px;
-  font-weight: bold;
-  display: none; /* מוסתר בהתחלה */
   z-index: 100;
   transition: opacity 0.3s ease;
+}
+
+.book-stats {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  border-radius: 20px;
+  margin-top: 20px;
 }

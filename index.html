@@ -20,6 +20,8 @@
       <button class="clear" onclick="onClearFilter()">Clear</button>
     </section>
 
+    <div class="user-msg"></div>
+
     <table class="book-container">
       <thead>
         <tr>
@@ -31,12 +33,18 @@
       <tbody class="book-list"></tbody>
     </table>
 
-    <button onclick="onAddBook()">Add book</button>
+    <button class="add-book" onclick="onAddBook()">Add book</button>
 
     <div id="modal" class="modal hidden">
       <p class="book-details"></p>
       <button onclick="onCloseModal()">Close</button>
     </div>
+
+    <section class="book-stats">
+      <h3>Expensive books (above 200): <span class="total-exp-books"></span></h3>
+      <h3>Average books: (80-120): <span class="total-avg-books"></span></h3>
+      <h3>Cheap books: (below 80): <span class="total-cheap-books"></span></h3>
+    </section>
 
     <script src="js/services/util-service.js"></script>
     <script src="js/services/storage-service.js"></script>
