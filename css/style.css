@@ -4,6 +4,7 @@
 
 body {
   background-color: aquamarine;
+  place-items: center;
 }
 
 table {

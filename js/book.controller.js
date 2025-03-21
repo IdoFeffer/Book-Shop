@@ -1,6 +1,7 @@
 "use strict"
 
 function onInit() {
+  _createBooks()
   renderBooks()
 }
 
@@ -8,15 +9,15 @@ function renderBooks() {
   const books = getBooks()
   const elTableBody = document.querySelector(".book-list")
 
-  var strHTMLs = books.map((book) => {
+  var strHTMLs = books.map(book => {
     return `
           <tr>
               <td>${book.title}</td>
               <td>${book.price}</td>
               <td>
-                  <button class="read" onclick="onRead(${book.id})">Read</button>
-                  <button class="update" onclick="onUpdateBook(${book.id})">Update</button>
-                  <button class="delete" onclick="onRemoveBook(${book.id},event)">Delete</button>
+                  <button class="read" onclick="onRead('${book.id}')">Read</button>
+                  <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
+                  <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
               </td>
           </tr>`
   })
@@ -39,7 +40,9 @@ function onUpdateBook(bookId) {
   renderBooks()
 }
 
-function onAddBook() {
+function onAddBook(ev) {
+  // ev.preventDefault()
+
   const newTitle = prompt("Enter new book")
   const newPrice = +prompt("Enter new price:")
 
@@ -47,6 +50,8 @@ function onAddBook() {
     alert("Please enter a valid title and a positive price.")
     return
   }
+
+  const elInput = document.querySelector(`input[title='todo-txt']`)
   // Update the Model:
   addBook(newTitle, newPrice)
   // Update the Dom:
