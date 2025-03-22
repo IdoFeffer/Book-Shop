@@ -69,4 +69,5 @@ function getTotalAvgBooksCount() {
 function getTotalCheapBooksCount() {
   return gBooks.filter(book => book.price <= 80).length
 }
-  
+
+

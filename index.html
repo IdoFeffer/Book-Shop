@@ -11,6 +11,13 @@
     <h1>Book Shop</h1>
 
     <section>
+      <select class="display" onchange="onChangeDisplay(this.value)">
+        <option class="book-table" value="table">Table</option>
+        <option value="grid"">Grid</option>
+      </select>
+    </section>
+
+    <section>
       <input
         class="filter"
         oninput="onFilterBooks(this.value)"
@@ -33,6 +40,8 @@
       <tbody class="book-list"></tbody>
     </table>
 
+    <section class="book-grid" style="display: none;"></section>
+
     <button class="add-book" onclick="onAddBook()">Add book</button>
 
     <div id="modal" class="modal hidden">
@@ -41,7 +50,9 @@
     </div>
 
     <section class="book-stats">
-      <h3>Expensive books (above 200): <span class="total-exp-books"></span></h3>
+      <h3>
+        Expensive books (above 200): <span class="total-exp-books"></span>
+      </h3>
       <h3>Average books: (80-120): <span class="total-avg-books"></span></h3>
       <h3>Cheap books: (below 80): <span class="total-cheap-books"></span></h3>
     </section>

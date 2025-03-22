@@ -1,41 +1,74 @@
 "use strict"
 
-var gFilterBy = ""
+var gFilterBook = ""
+var gViewMode = "table"
 
 function onInit() {
   _createBooks()
+  gViewMode = loadFromStorage("viewMode") || "table"
   renderBooks()
 }
 
 function renderBooks() {
-  const books = getBooks().filter((book) =>
-    book.title.toLowerCase().includes(gFilterBy.toLowerCase())
-  )
-  // const books = getBooks()
+  const elTableView = document.querySelector(".book-container")
+  const elGridView = document.querySelector(".book-grid")
   const elTableBody = document.querySelector(".book-list")
+  const books = getBooks().filter((book) =>
+    book.title.toLowerCase().includes(gFilterBook.toLowerCase())
+  )
 
-  var strHTMLs = books.map((book) => {
-    return `
-          <tr>
-              <td>${book.title}</td>
-              <td>${book.price}</td>
-              <td>
-                  <button class="read" onclick="onRead('${book.id}')">Read</button>
-                  <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
-                  <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
-              </td>
-          </tr>`
-  })
-  elTableBody.innerHTML = strHTMLs.join("")
+  if (books.length === 0) {
+    elTableView.style.display = "block"
+    elGridView.style.display = "none"
+    elTableBody.innerHTML = `
+      <tr>
+        <td colspan="3">No books were found...</td>
+      </tr>`
+    return
+  }
+
+  if (gViewMode === "table") {
+    elTableView.style.display = "block"
+    elGridView.style.display = "none"
+
+    const strHTMLs = books.map((book) => {
+      return `
+        <tr>
+          <td>${book.title}</td>
+          <td>${book.price}</td>
+          <td>
+            <button class="read" onclick="onRead('${book.id}')">Read</button>
+            <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
+            <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
+          </td>
+        </tr>`
+    })
+    elTableBody.innerHTML = strHTMLs.join("")
+  } else if (gViewMode === "grid") {
+    elGridView.style.display = "grid"
+    elTableView.style.display = "none"
+
+    const strHTMLs = books.map((book) => {
+      return `
+        <div class="book-card">
+          <h3>${book.title}</h3>
+          <p>${book.price}</p>
+          <button class="read" onclick="onRead('${book.id}')">Read</button>
+          <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
+          <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
+        </div>`
+    })
+    elGridView.innerHTML = strHTMLs.join("")
+  }
 
   renderStat()
 }
 
 function renderStat() {
-
   document.querySelector(".total-exp-books").innerText = getTotalExpBooksCount()
-  document.querySelector(".total-avg-books").innerText = getTotalAvgBooksCount() 
-  document.querySelector(".total-cheap-books").innerText = getTotalCheapBooksCount()
+  document.querySelector(".total-avg-books").innerText = getTotalAvgBooksCount()
+  document.querySelector(".total-cheap-books").innerText =
+    getTotalCheapBooksCount()
 }
 
 function onRemoveBook(bookId, ev) {
@@ -98,12 +131,12 @@ function onCloseModal() {
 }
 
 function onFilterBooks(filterTxt) {
-  gFilterBy = filterTxt
+  gFilterBook = filterTxt
   renderBooks()
 }
 
 function onClearFilter() {
-  gFilterBy = ""
+  gFilterBook = ""
   document.querySelector(`input[type='text']`).value = ""
   renderBooks()
 }
@@ -116,4 +149,11 @@ function showUserMsg(txt) {
   setTimeout(() => {
     elMsg.style.display = "none"
   }, 2000)
+}
+
+
+function onChangeDisplay(mode) {
+  gViewMode = mode
+  saveToStorage("viewMode", gViewMode)
+  renderBooks()
 }
