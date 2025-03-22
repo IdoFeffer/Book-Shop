@@ -91,8 +91,9 @@ function onUpdateBook(bookId) {
 }
 
 function onAddBook(ev) {
-  const newTitle = prompt("Enter new book")
-  const newPrice = +prompt("Enter new price:")
+  // const newTitle = prompt("Enter new book")
+  // const newPrice = +prompt("Enter new price:")
+  document.querySelector(".add-book-modal").style.display = "block"
 
   if (!newTitle || newPrice <= 0) {
     alert("Please enter a valid title and a positive price.")
@@ -105,6 +106,26 @@ function onAddBook(ev) {
   // Update the Dom:
   showUserMsg("Book was added")
   renderBooks()
+}
+
+function onAddBookFromModal() {
+  const elAddBook = document.querySelector(".add-book-modal")
+  const title = document.querySelector(".book-title-input").value
+  const price = +document.querySelector(".book-price-input").value
+
+  if (!title || price <= 0) {
+    alert("Please enter a valid title and a positive price.")
+    return
+  }
+
+  addBook(title, price)
+  showUserMsg("Book was added")
+  elAddBook.style.display = "none"
+  renderBooks()
+}
+
+function onCancelAddModal() {
+  document.querySelector(".add-book-modal").style.display = "none"
 }
 
 function onRead(bookId) {
@@ -120,6 +141,9 @@ function onRead(bookId) {
                 <h2>${book.title}</h2>
                 <p><strong>Price:</strong> $${book.price}</p>
                 <p><strong>ID:</strong> ${book.id}</p>
+                <button onclick="onChangeRating('${book.id}', -1)">➖</button>
+                <span>${book.rating}</span>
+                <button onclick="onChangeRating('${book.id}', 1)">➕</button>
             </div>
         </div>
         `
@@ -151,9 +175,18 @@ function showUserMsg(txt) {
   }, 2000)
 }
 
-
 function onChangeDisplay(mode) {
   gViewMode = mode
   saveToStorage("viewMode", gViewMode)
   renderBooks()
+}
+
+function onChangeRating(bookId, diff) {
+  const book = gBooks.find((book) => (book.id = bookId))
+  const newRating = book.rating + diff
+  if (newRating >= 0 && newRating <= 5) {
+    book.rating = newRating
+    _saveBooks()
+    onRead(bookId)
+  }
 }

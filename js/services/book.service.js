@@ -51,6 +51,8 @@ function _createBook(title, price) {
     id: "t" + getRandomInt(100, 900),
     title,
     price,
+    rating: 0,
+    imgUrl: `https://picsum.photos/100/150?random=${getRandomInt(1, 1000)}`
   }
 }
 

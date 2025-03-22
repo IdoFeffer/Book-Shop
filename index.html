@@ -43,6 +43,15 @@
     <section class="book-grid" style="display: none;"></section>
 
     <button class="add-book" onclick="onAddBook()">Add book</button>
+    
+    <div class="add-book-modal" style="display: none;">
+      <h3>Add new book: </h3>
+      <input type="text" placeholder="Book Title" class="book-title-input"/>
+      <h3>price: </h3>
+      <input type="number" placeholder="Price" class="book-price-input"/>
+      <button class="add-book-from-modal" onclick="onAddBookFromModal()">Add</button>
+      <button class="close-book-modal" onclick="onCancelAddModal()">Cancel</button>
+    </div>
 
     <div id="modal" class="modal hidden">
       <p class="book-details"></p>
