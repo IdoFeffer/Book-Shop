@@ -3,19 +3,27 @@
 var gFilterBook = ""
 var gViewMode = "table"
 
+const gQueryOptions = {
+  filterBy: { txt: "", rating: 0 },
+  sortBy: {},
+  page: { idx: 0, size: 2 },
+}
+
 function onInit() {
   _createBooks()
+  readQueryParams()
   gViewMode = loadFromStorage("viewMode") || "table"
   renderBooks()
 }
 
 function renderBooks() {
+  var books = getBooks(gQueryOptions)
   const elTableView = document.querySelector(".book-container")
   const elGridView = document.querySelector(".book-grid")
   const elTableBody = document.querySelector(".book-list")
-  const books = getBooks().filter((book) =>
-    book.title.toLowerCase().includes(gFilterBook.toLowerCase())
-  )
+  // const books = getBooks().filter((book) =>
+  //   book.title.toLowerCase().includes(gFilterBook.toLowerCase())
+  // )
 
   if (books.length === 0) {
     elTableView.style.display = "block"
@@ -35,12 +43,17 @@ function renderBooks() {
       return `
         <tr>
           <td>${book.title}</td>
-          <td>${book.price}</td>
+          <td>${book.price.toFixed(2)}$</td>
           <td>
             <button class="read" onclick="onRead('${book.id}')">Read</button>
-            <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
-            <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
+            <button class="update" onclick="onUpdateBook('${
+              book.id
+            }')">Update</button>
+            <button class="delete" onclick="onRemoveBook('${
+              book.id
+            }',event)">Delete</button>
           </td>
+          <td>${book.rating}⭐</td>
         </tr>`
     })
     elTableBody.innerHTML = strHTMLs.join("")
@@ -51,16 +64,20 @@ function renderBooks() {
     const strHTMLs = books.map((book) => {
       return `
         <div class="book-card">
-          <h3>${book.title}</h3>
-          <p>${book.price}</p>
+        <h3>${book.title}</h3>
+        <p>${book.price.toFixed(2)}$</p>
+        <td>${book.rating}⭐</td>
           <button class="read" onclick="onRead('${book.id}')">Read</button>
-          <button class="update" onclick="onUpdateBook('${book.id}')">Update</button>
-          <button class="delete" onclick="onRemoveBook('${book.id}',event)">Delete</button>
+          <button class="update" onclick="onUpdateBook('${
+            book.id
+          }')">Update</button>
+          <button class="delete" onclick="onRemoveBook('${
+            book.id
+          }',event)">Delete</button>
         </div>`
     })
     elGridView.innerHTML = strHTMLs.join("")
   }
-
   renderStat()
 }
 
@@ -72,7 +89,7 @@ function renderStat() {
 }
 
 function onRemoveBook(bookId, ev) {
-  ev.stopPropagation()
+  // ev.stopPropagation()
   // Update the Model:
   removeBook(bookId)
   // Update the Dom:
@@ -91,8 +108,6 @@ function onUpdateBook(bookId) {
 }
 
 function onAddBook(ev) {
-  // const newTitle = prompt("Enter new book")
-  // const newPrice = +prompt("Enter new price:")
   document.querySelector(".add-book-modal").style.display = "block"
 
   if (!newTitle || newPrice <= 0) {
@@ -100,7 +115,8 @@ function onAddBook(ev) {
     return
   }
 
-  const elInput = document.querySelector(`input[title='todo-txt']`)
+  // const elInput = document.querySelector(`input[title='todo-txt']`)
+
   // Update the Model:
   addBook(newTitle, newPrice)
   // Update the Dom:
@@ -160,19 +176,14 @@ function onFilterBooks(filterTxt) {
 }
 
 function onClearFilter() {
-  gFilterBook = ""
-  document.querySelector(`input[type='text']`).value = ""
+  gQueryOptions.filterBy.txt = ""
+  gQueryOptions.filterBy.rating = 0
+
+  document.querySelector('.filter-by input[type="text"]').value = ""
+  // document.querySelector('.filter-by input[type="range"]').value = 0
+
+  setQueryParams()
   renderBooks()
-}
-
-function showUserMsg(txt) {
-  const elMsg = document.querySelector(".user-msg")
-  elMsg.innerText = txt
-
-  elMsg.style.display = "block"
-  setTimeout(() => {
-    elMsg.style.display = "none"
-  }, 2000)
 }
 
 function onChangeDisplay(mode) {
@@ -189,4 +200,120 @@ function onChangeRating(bookId, diff) {
     _saveBooks()
     onRead(bookId)
   }
+}
+
+function onSetFilterBy(filterBy) {
+  if (filterBy.txt !== undefined) {
+    gQueryOptions.filterBy.txt = filterBy.txt
+  } else if (filterBy.rating !== undefined) {
+    gQueryOptions.filterBy.rating = filterBy.rating
+  }
+  setQueryParams()
+  renderBooks()
+}
+
+function onSetSortBy() {
+  const elSortField = document.querySelector(".sort-by select")
+  const elSortRat = document.querySelector(".sort-by .sort-desc")
+
+  const sortField = elSortField.value
+  const sortRat = elSortRat.checked ? -1 : 1
+  console.log("sortDir:", sortRat)
+
+  gQueryOptions.sortBy = { [sortField]: sortRat }
+  // console.log('gQueryOptions.sortBy:', gQueryOptions.sortBy)
+
+  gQueryOptions.page.idx = 0
+  renderBooks()
+  setQueryParams()
+}
+
+function readQueryParams() {
+  const queryParams = new URLSearchParams(window.location.search)
+
+  gQueryOptions.filterBy = {
+    txt: queryParams.get("title") || "",
+    rating: +queryParams.get("rating") || 0,
+  }
+
+  if (queryParams.get("sortBy")) {
+    const prop = queryParams.get("sortBy")
+    const dir = queryParams.get("sort-by")
+    gQueryOptions.sortBy[prop] = dir
+  }
+
+  // if (queryParams.get("pageIdx")) {
+  //   gQueryOptions.page.idx = +queryParams.get("pageIdx")
+  //   gQueryOptions.page.size = +queryParams.get("pageSize")
+  // }
+  renderQueryParams()
+}
+
+function renderQueryParams() {
+  const elRange = document.querySelector('.filter-by input[type="range"]')
+  if (elRange) elRange.value = gQueryOptions.filterBy.rating
+  const elText = document.querySelector('.filter-by input[type="text"]')
+  if (elText) elText.value = gQueryOptions.filterBy.txt
+
+  // document.querySelector('.filter-by input[type="text"]').value =
+  //   gQueryOptions.filterBy.txt
+  // document.querySelector('.sort-by input[type="range"]').value =
+  //   gQueryOptions.filterBy.rating
+
+  const sortKeys = Object.keys(gQueryOptions.sortBy)
+  const sortBy = sortKeys[0]
+  const rating = gQueryOptions.sortBy[sortKeys[0]]
+
+  document.querySelector(".sort-by select").value = sortBy || ""
+  document.querySelector(".sort-by .sort-desc").checked =
+    rating === "-1" ? true : false
+}
+
+function setQueryParams() {
+  const queryParas = new URLSearchParams()
+
+  queryParas.set("title", gQueryOptions.filterBy.txt)
+  queryParas.set("rating", gQueryOptions.filterBy.rating)
+
+  const sortKeys = Object.keys(gQueryOptions.sortBy)
+  if (sortKeys.length) {
+    queryParas.set("sortBy", sortKeys[0])
+    queryParas.set("sortRating", gQueryOptions.sortBy[sortKeys[0]])
+  }
+  const newUrl =
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    window.location.pathname +
+    "?" +
+    queryParas.toString()
+
+  window.history.pushState({ path: newUrl }, "", newUrl)
+}
+
+
+
+function onNextPage() {
+  const pageCount = getPageCount(gQueryOptions)
+
+  if (gQueryOptions.page.idx === pageCount - 1) {
+    gQueryOptions.page.idx = 0
+  } else {
+    gQueryOptions.page.idx++
+  }
+
+  renderBooks()
+  setQueryParams()
+}
+
+function onPrevPage() {
+const pageCount = getPageCount(gQueryOptions)
+
+  if (gQueryOptions.page.idx === 0) {
+    gQueryOptions.page.idx = pageCount - 1
+  } else {
+    gQueryOptions.page.idx--
+  }
+  renderBooks()
+  setQueryParams()
 }

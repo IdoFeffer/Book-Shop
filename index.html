@@ -8,50 +8,89 @@
   </head>
 
   <body onload="onInit()">
-    <h1>Book Shop</h1>
+    <header>
+      <h1>Book Shop</h1>
+    </header>
 
-    <section>
-      <select class="display" onchange="onChangeDisplay(this.value)">
-        <option class="book-table" value="table">Table</option>
-        <option value="grid"">Grid</option>
-      </select>
+    <section class="view-switch">
+      <button onclick="onChangeDisplay('table')">☰</button>
+      <!-- טבלה -->
+      <button onclick="onChangeDisplay('grid')">☷</button>
+      <!-- גריד -->
     </section>
 
-    <section>
-      <input
-        class="filter"
-        oninput="onFilterBooks(this.value)"
-        type="text"
-        placeholder="book list by title"
-      />
-      <button class="clear" onclick="onClearFilter()">Clear</button>
-    </section>
+    <section class="book-filter">
+      <fieldset>
+        <legend>Filter & Sorting</legend>
 
+        <div class="filter-by">
+          <input
+            oninput="onSetFilterBy({txt: this.value})"
+            placeholder="Search book"
+            type="text"/>
+        </div>
+
+        <div class="filter-by">
+          <label>
+            <span>Min rating:</span>
+            <input type="range" min="0" max="5" value="0" 
+            onchange="this.title=this.value;onSetFilterBy({rating: +this.value})"/>
+          </label>
+        </div>
+
+
+        <div class="sort-by">
+          <select onchange="onSetSortBy()">
+              <option value="">Select Sorting</option>
+              <option value="price">Price</option>
+              <option value="title">Title</option>
+              <option value="rating">Rating</option>
+          </select>
+          <label>
+              <span>Descending</span>
+              <input class="sort-desc" type="checkbox" oninput="onSetSortBy()" />
+          </label>
+      </div>
+
+
+      </fieldset>
+    </section>
+    <button class="clear" onclick="onClearFilter()">Clear</button>
+    
     <div class="user-msg"></div>
+    <button class="add-book" onclick="onAddBook()">Add book</button>
+    <div class="add-book-modal" style="display: none">
+      <h3>Add new book:</h3>
+      <input type="text" placeholder="Book Title" class="book-title-input" />
+      <h3>price:</h3>
+      <input type="number" placeholder="Price" class="book-price-input" />
+      <button class="add-book-from-modal" onclick="onAddBookFromModal()">
+        Add
+      </button>
+      <button class="close-book-modal" onclick="onCancelAddModal()">
+        Cancel
+      </button>
+    </div>
 
+    <div class="pagination">
+      <button onclick="onPrevPage()">Prev</button>
+      <span>Page: <span class="curr-page"></span></span>
+      <button onclick="onNextPage()">Next</button>
+    </div>
+  
     <table class="book-container">
       <thead>
         <tr>
           <th>Title</th>
           <th>Price</th>
           <th>Actions</th>
+          <th>Rating</th>
         </tr>
       </thead>
       <tbody class="book-list"></tbody>
     </table>
 
-    <section class="book-grid" style="display: none;"></section>
-
-    <button class="add-book" onclick="onAddBook()">Add book</button>
-    
-    <div class="add-book-modal" style="display: none;">
-      <h3>Add new book: </h3>
-      <input type="text" placeholder="Book Title" class="book-title-input"/>
-      <h3>price: </h3>
-      <input type="number" placeholder="Price" class="book-price-input"/>
-      <button class="add-book-from-modal" onclick="onAddBookFromModal()">Add</button>
-      <button class="close-book-modal" onclick="onCancelAddModal()">Cancel</button>
-    </div>
+    <section class="book-grid" style="display: none"></section>
 
     <div id="modal" class="modal hidden">
       <p class="book-details"></p>
