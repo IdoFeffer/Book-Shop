@@ -1,7 +1,12 @@
 * {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow';
   box-sizing: border-box;
 }
 
+body {
+  background-color: rgb(23 131 116);
+  place-items: center;
+}
 header {
   background-color: lightblue;
   padding: 5px;
@@ -9,10 +14,6 @@ header {
   margin-bottom: 10px;
 }
 
-body {
-  background-color: rgb(23 131 116);
-  place-items: center;
-}
 
 table {
   border: 1px solid black;
@@ -193,4 +194,9 @@ tbody {
 .filter-by{
   padding: 10px;
   margin: 10px;
+}
+
+.book-filter{
+  background-color: #4caf50;
+  padding: 10px;
 }

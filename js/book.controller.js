@@ -2,11 +2,12 @@
 
 var gFilterBook = ""
 var gViewMode = "table"
+var gEditedBookId = null
 
 const gQueryOptions = {
   filterBy: { txt: "", rating: 0 },
   sortBy: {},
-  page: { idx: 0, size: 2 },
+  page: { idx: 0, size: 5 },
 }
 
 function onInit() {
@@ -44,6 +45,7 @@ function renderBooks() {
         <tr>
           <td>${book.title}</td>
           <td>${book.price.toFixed(2)}$</td>
+          <td>${"⭐".repeat(book.rating)}</td>
           <td>
             <button class="read" onclick="onRead('${book.id}')">Read</button>
             <button class="update" onclick="onUpdateBook('${
@@ -53,7 +55,6 @@ function renderBooks() {
               book.id
             }',event)">Delete</button>
           </td>
-          <td>${book.rating}⭐</td>
         </tr>`
     })
     elTableBody.innerHTML = strHTMLs.join("")
@@ -66,7 +67,7 @@ function renderBooks() {
         <div class="book-card">
         <h3>${book.title}</h3>
         <p>${book.price.toFixed(2)}$</p>
-        <td>${book.rating}⭐</td>
+          <td>${"⭐".repeat(book.rating)}</td>
           <button class="read" onclick="onRead('${book.id}')">Read</button>
           <button class="update" onclick="onUpdateBook('${
             book.id
@@ -98,13 +99,17 @@ function onRemoveBook(bookId, ev) {
 }
 
 function onUpdateBook(bookId) {
-  const newPrice = +prompt("Enter new price:")
-  if (!newPrice || newPrice === 0) return
+  const book = gBooks.find((book) => book.id === bookId)
+  if (!book) return
 
-  updatePrice(bookId, newPrice)
+  gEditedBookId = bookId
 
-  showUserMsg("Book was updated")
-  renderBooks()
+  document.querySelector(".book-title-input").value = book.title
+  document.querySelector(".book-price-input").value = book.price
+
+  document.querySelector(".add-book-from-modal").innerText = "Save"
+
+  document.querySelector(".add-book-modal").style.display = "block"
 }
 
 function onAddBook(ev) {
@@ -133,7 +138,14 @@ function onAddBookFromModal() {
     alert("Please enter a valid title and a positive price.")
     return
   }
-
+  if (gEditedBookId) {
+    updateBook(gEditedBookId, title, price)
+    gEditedBookId = null
+    showUserMsg("Book was updated")
+    elAddBook.style.display = "none"
+    renderBooks()
+    return
+  }
   addBook(title, price)
   showUserMsg("Book was added")
   elAddBook.style.display = "none"
@@ -202,6 +214,8 @@ function onChangeRating(bookId, diff) {
   }
 }
 
+// Filter, Sort & Pagination
+
 function onSetFilterBy(filterBy) {
   if (filterBy.txt !== undefined) {
     gQueryOptions.filterBy.txt = filterBy.txt
@@ -212,21 +226,49 @@ function onSetFilterBy(filterBy) {
   renderBooks()
 }
 
-function onSetSortBy() {
-  const elSortField = document.querySelector(".sort-by select")
-  const elSortRat = document.querySelector(".sort-by .sort-desc")
+function onSetSortBy(field) {
+  const currSort = gQueryOptions.sortBy
+  const currField = Object.keys(currSort)[0]
+  const currDir = currSort[currField]
 
-  const sortField = elSortField.value
-  const sortRat = elSortRat.checked ? -1 : 1
-  console.log("sortDir:", sortRat)
+  if (currField === field) {
+    field = currField 
+    gQueryOptions.sortBy[field] *= -1
+  } else {
 
-  gQueryOptions.sortBy = { [sortField]: sortRat }
-  // console.log('gQueryOptions.sortBy:', gQueryOptions.sortBy)
-
+    gQueryOptions.sortBy = {[field]: 1}
+  }
   gQueryOptions.page.idx = 0
   renderBooks()
   setQueryParams()
 }
+
+function onNextPage() {
+  const pageCount = getPageCount(gQueryOptions)
+
+  if (gQueryOptions.page.idx === pageCount - 1) {
+    gQueryOptions.page.idx = 0
+  } else {
+    gQueryOptions.page.idx++
+  }
+
+  renderBooks()
+  setQueryParams()
+}
+
+function onPrevPage() {
+  const pageCount = getPageCount(gQueryOptions)
+
+  if (gQueryOptions.page.idx === 0) {
+    gQueryOptions.page.idx = pageCount - 1
+  } else {
+    gQueryOptions.page.idx--
+  }
+  renderBooks()
+  setQueryParams()
+}
+
+// Query Params
 
 function readQueryParams() {
   const queryParams = new URLSearchParams(window.location.search)
@@ -289,31 +331,4 @@ function setQueryParams() {
     queryParas.toString()
 
   window.history.pushState({ path: newUrl }, "", newUrl)
-}
-
-
-
-function onNextPage() {
-  const pageCount = getPageCount(gQueryOptions)
-
-  if (gQueryOptions.page.idx === pageCount - 1) {
-    gQueryOptions.page.idx = 0
-  } else {
-    gQueryOptions.page.idx++
-  }
-
-  renderBooks()
-  setQueryParams()
-}
-
-function onPrevPage() {
-const pageCount = getPageCount(gQueryOptions)
-
-  if (gQueryOptions.page.idx === 0) {
-    gQueryOptions.page.idx = pageCount - 1
-  } else {
-    gQueryOptions.page.idx--
-  }
-  renderBooks()
-  setQueryParams()
 }

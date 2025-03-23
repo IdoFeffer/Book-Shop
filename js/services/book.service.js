@@ -65,6 +65,15 @@ function updatePrice(bookId, newPrice) {
   return book
 }
 
+function updateBook(bookId, title, newRating) {
+  const car = getCarById(bookId)
+  car.rating = newRating
+  car.title = title
+
+  _saveCarsToStorage()
+  return car
+}
+
 function addBook(title, price) {
   const add = _createBook(title, price)
 
@@ -137,10 +146,11 @@ function getPageCount(options) {
 
 function _filterBooks(filterBy) {
   var books = gBooks
-  if (filterBy.txt) {
+
+  if (filterBy.title) {
       books = cars.filter(book => book.title.includes(filterBy.txt))
   }
-  if (filterBy.minSpeed) {
+  if (filterBy.rating) {
       books = cars.filter(book => book.rating >= filterBy.rating)
   }
   return books
