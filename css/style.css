@@ -200,3 +200,42 @@ tbody {
   background-color: #4caf50;
   padding: 10px;
 }
+
+.add-book-modal {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  width: 300px;
+  margin: 20px auto;
+}
+
+.add-book-modal h3 {
+  margin: 10px 0;
+}
+
+.add-book-modal input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-book-modal button {
+  padding: 8px 12px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.add-book-from-modal {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.close-book-modal {
+  background-color: #f44336;
+  color: white;
+}
+

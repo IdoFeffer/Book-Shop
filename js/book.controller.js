@@ -176,6 +176,11 @@ function onRead(bookId) {
         </div>
         `
   document.querySelector("#modal").classList.remove("hidden")
+
+  const queryParams = new URLSearchParams(window.location.search)
+  queryParams.set("bookId", bookId)
+  const newUrl = `${window.location.pathname}?${queryParams.toString()}`
+  window.history.pushState({}, "", newUrl)
 }
 
 function onCloseModal() {
@@ -232,11 +237,10 @@ function onSetSortBy(field) {
   const currDir = currSort[currField]
 
   if (currField === field) {
-    field = currField 
+    field = currField
     gQueryOptions.sortBy[field] *= -1
   } else {
-
-    gQueryOptions.sortBy = {[field]: 1}
+    gQueryOptions.sortBy = { [field]: 1 }
   }
   gQueryOptions.page.idx = 0
   renderBooks()
@@ -273,6 +277,9 @@ function onPrevPage() {
 function readQueryParams() {
   const queryParams = new URLSearchParams(window.location.search)
 
+  const bookId = queryParams.get("bookId")
+  if (bookId) onRead(bookId)
+
   gQueryOptions.filterBy = {
     txt: queryParams.get("title") || "",
     rating: +queryParams.get("rating") || 0,
@@ -280,14 +287,16 @@ function readQueryParams() {
 
   if (queryParams.get("sortBy")) {
     const prop = queryParams.get("sortBy")
-    const dir = queryParams.get("sort-by")
+    const dir = +queryParams.get("sortRating")
     gQueryOptions.sortBy[prop] = dir
   }
 
-  // if (queryParams.get("pageIdx")) {
-  //   gQueryOptions.page.idx = +queryParams.get("pageIdx")
-  //   gQueryOptions.page.size = +queryParams.get("pageSize")
-  // }
+  const pageIdx = +queryParams.get("pageIdx")
+  const pageSize = +queryParams.get("pageSize")
+
+  if (!isNaN(pageIdx)) gQueryOptions.page.idx = pageIdx
+  if (!isNaN(pageSize)) gQueryOptions.page.size = pageSize
+
   renderQueryParams()
 }
 
@@ -297,11 +306,6 @@ function renderQueryParams() {
   const elText = document.querySelector('.filter-by input[type="text"]')
   if (elText) elText.value = gQueryOptions.filterBy.txt
 
-  // document.querySelector('.filter-by input[type="text"]').value =
-  //   gQueryOptions.filterBy.txt
-  // document.querySelector('.sort-by input[type="range"]').value =
-  //   gQueryOptions.filterBy.rating
-
   const sortKeys = Object.keys(gQueryOptions.sortBy)
   const sortBy = sortKeys[0]
   const rating = gQueryOptions.sortBy[sortKeys[0]]
@@ -309,6 +313,14 @@ function renderQueryParams() {
   document.querySelector(".sort-by select").value = sortBy || ""
   document.querySelector(".sort-by .sort-desc").checked =
     rating === "-1" ? true : false
+
+  const pageIdx = +queryParams.get("pageIdx")
+  const pageSize = +queryParams.get("pageSize")
+
+  if (!isNaN(pageIdx)) gQueryOptions.page.idx = pageIdx
+  if (!isNaN(pageSize)) gQueryOptions.page.size = pageSize
+
+  readQueryParams()
 }
 
 function setQueryParams() {
@@ -322,6 +334,9 @@ function setQueryParams() {
     queryParas.set("sortBy", sortKeys[0])
     queryParas.set("sortRating", gQueryOptions.sortBy[sortKeys[0]])
   }
+  queryParas.set("pageIdx", gQueryOptions.page.idx)
+  queryParas.set("pageSize", gQueryOptions.page.size)
+
   const newUrl =
     window.location.protocol +
     "//" +
