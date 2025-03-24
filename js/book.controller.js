@@ -19,6 +19,7 @@ function onInit() {
 
 function renderBooks() {
   var books = getBooks(gQueryOptions)
+
   const elTableView = document.querySelector(".book-container")
   const elGridView = document.querySelector(".book-grid")
   const elTableBody = document.querySelector(".book-list")
@@ -113,17 +114,17 @@ function onUpdateBook(bookId) {
 }
 
 function onAddBook(ev) {
+  const newTitle = document.querySelector(".book-title-input").value
+  const newPrice = +document.querySelector(".book-price-input").value
+  gEditedBookId = null
   document.querySelector(".add-book-modal").style.display = "block"
 
-  if (!newTitle || newPrice <= 0) {
-    alert("Please enter a valid title and a positive price.")
-    return
-  }
+  if (!newTitle || newPrice <= 0) return
 
   // const elInput = document.querySelector(`input[title='todo-txt']`)
 
   // Update the Model:
-  addBook(newTitle, newPrice)
+  // addBook(newTitle, newPrice)
   // Update the Dom:
   showUserMsg("Book was added")
   renderBooks()
@@ -132,12 +133,13 @@ function onAddBook(ev) {
 function onAddBookFromModal() {
   const elAddBook = document.querySelector(".add-book-modal")
   const title = document.querySelector(".book-title-input").value
-  const price = +document.querySelector(".book-price-input").value
+  const price = +document.querySelector(".book-price-input").value 
 
   if (!title || price <= 0) {
     alert("Please enter a valid title and a positive price.")
     return
   }
+
   if (gEditedBookId) {
     updateBook(gEditedBookId, title, price)
     gEditedBookId = null
@@ -146,6 +148,7 @@ function onAddBookFromModal() {
     renderBooks()
     return
   }
+
   addBook(title, price)
   showUserMsg("Book was added")
   elAddBook.style.display = "none"
@@ -301,6 +304,8 @@ function readQueryParams() {
 }
 
 function renderQueryParams() {
+  const queryParams = new URLSearchParams(window.location.search)
+  
   const elRange = document.querySelector('.filter-by input[type="range"]')
   if (elRange) elRange.value = gQueryOptions.filterBy.rating
   const elText = document.querySelector('.filter-by input[type="text"]')
@@ -320,7 +325,6 @@ function renderQueryParams() {
   if (!isNaN(pageIdx)) gQueryOptions.page.idx = pageIdx
   if (!isNaN(pageSize)) gQueryOptions.page.size = pageSize
 
-  readQueryParams()
 }
 
 function setQueryParams() {

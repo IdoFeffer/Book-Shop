@@ -65,13 +65,14 @@ function updatePrice(bookId, newPrice) {
   return book
 }
 
-function updateBook(bookId, title, newRating) {
-  const car = getCarById(bookId)
-  car.rating = newRating
-  car.title = title
+function updateBook(bookId, title, price) {
+  const book = gBooks.find(book => book.id === bookId)
+  if (!book) return null
 
-  _saveCarsToStorage()
-  return car
+  book.title = title
+  book.price = price
+  _saveBooks()
+  return book
 }
 
 function addBook(title, price) {
@@ -79,18 +80,24 @@ function addBook(title, price) {
 
   gBooks.unshift(add)
   _saveBooks()
-  ///////////////////////////////////////
   return add
 }
 
 function _createBooks() {
   gBooks = loadFromStorage(STORAGE_KEY)
 
-  if (!gBooks || !gBooks.length === 0) {
+  if (!gBooks || gBooks.length === 0) {
     gBooks = [
       _createBook("The Adventure of Lori Ipsi", 120),
       _createBook("World Atlas", 300, "img/atlas.jpg"),
       _createBook("Zorba The Greek", 87, "img/zobra.jpg"),
+      _createBook('Hary Potter 1', 200, 'img/HaryPotter1.jpg'),
+      _createBook('Hary Potter 2', 150, 'img/HaryPotter2.jpg'),
+      _createBook('Hary Potter 3', 100,'img/HaryPotter3.jpg' ),
+      _createBook('Hary Potter 4', 300,'img/HaryPotter4.jpg' ),
+      _createBook('Hary Potter 5', 175, 'img/HaryPotter5.jpg'),
+      _createBook('Hary Potter 6', 80, 'img/HaryPotter6.jpg'),
+      _createBook('Hary Potter 7', 1250, 'img/HaryPotter7.jpg')
     ]
     _saveBooks()
   }
@@ -147,21 +154,18 @@ function getPageCount(options) {
 function _filterBooks(filterBy) {
   var books = gBooks
 
-  if (filterBy.title) {
-      books = cars.filter(book => book.title.includes(filterBy.txt))
+  if (filterBy.txt) {
+      books = books.filter(book => book.title.includes(filterBy.txt))
   }
   if (filterBy.rating) {
-      books = cars.filter(book => book.rating >= filterBy.rating)
+      books = books.filter(book => book.rating >= filterBy.rating)
   }
   return books
 }
 
 // TODO
 function resetAddBookModal() {
-  const title = document.querySelector(".book-title-input")
-  const price = +document.querySelector(".book-price-input")
-
-  title.value = ""
-  price.value = ""
+  const title = document.querySelector(".book-title-input").value = ''
+  const price = document.querySelector(".book-price-input").value = ''
 }
 
