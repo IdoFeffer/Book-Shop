@@ -12,13 +12,13 @@
       <h1>Book Shop</h1>
     </header>
 
+    <!-- Table / Grid -->
     <section class="view-switch">
       <button onclick="onChangeDisplay('table')">☰</button>
-      <!-- טבלה -->
       <button onclick="onChangeDisplay('grid')">☷</button>
-      <!-- גריד -->
     </section>
 
+    <!-- Filter and Sorting -->
     <section class="book-filter">
       <fieldset>
         <legend>Filter & Sorting</legend>
@@ -58,8 +58,10 @@
     <button class="clear" onclick="onClearFilter()">Clear</button>
     
     <div class="user-msg"></div>
-
+    
+    <!-- Add book -->
     <button class="add-book" onclick="onAddBook()">Add book</button>
+
     <div class="add-book-modal" style="display: none">
       <h3>Add new book:</h3>
       <input type="text" placeholder="Book Title" class="book-title-input" />
@@ -73,12 +75,15 @@
       </button>
     </div>
 
+    <!-- Pages -->
     <div class="pagination">
       <button onclick="onPrevPage()">Prev</button>
       <span>Page: <span class="curr-page"></span></span>
       <button onclick="onNextPage()">Next</button>
+      <div class="page-numbers"></div>
     </div>
   
+    <!-- Table -->
     <table class="book-container">
       <thead>
         <tr>

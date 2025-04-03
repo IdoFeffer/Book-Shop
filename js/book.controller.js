@@ -23,16 +23,14 @@ function renderBooks() {
   const elTableView = document.querySelector(".book-container")
   const elGridView = document.querySelector(".book-grid")
   const elTableBody = document.querySelector(".book-list")
-  // const books = getBooks().filter((book) =>
-  //   book.title.toLowerCase().includes(gFilterBook.toLowerCase())
-  // )
+
 
   if (books.length === 0) {
     elTableView.style.display = "block"
     elGridView.style.display = "none"
     elTableBody.innerHTML = `
       <tr>
-        <td colspan="3">No books were found...</td>
+        <td colspan="4">No books were found...</td>
       </tr>`
     return
   }
@@ -81,6 +79,7 @@ function renderBooks() {
     elGridView.innerHTML = strHTMLs.join("")
   }
   renderStat()
+  renderPageNumbers()
 }
 
 function renderStat() {
@@ -88,6 +87,20 @@ function renderStat() {
   document.querySelector(".total-avg-books").innerText = getTotalAvgBooksCount()
   document.querySelector(".total-cheap-books").innerText =
     getTotalCheapBooksCount()
+}
+
+function renderPageNumbers() {
+  const elPageNumbers = document.querySelector(".page-numbers")
+  const pageCount = getPageCount(gQueryOptions)
+
+  var strHTML = ""
+  for (let i = 0; i < pageCount; i++) {
+    strHTML += `<button class="page-btn ${
+      i === gQueryOptions.page.idx ? "active" : ""
+    }" onclick="onGoToPage(${i})">${i + 1}</button>`
+  }
+
+  elPageNumbers.innerHTML = strHTML
 }
 
 function onRemoveBook(bookId, ev) {
@@ -109,7 +122,6 @@ function onUpdateBook(bookId) {
   document.querySelector(".book-price-input").value = book.price
 
   document.querySelector(".add-book-from-modal").innerText = "Save"
-
   document.querySelector(".add-book-modal").style.display = "block"
 }
 
@@ -126,14 +138,14 @@ function onAddBook(ev) {
   // Update the Model:
   // addBook(newTitle, newPrice)
   // Update the Dom:
-  showUserMsg("Book was added")
+  // showUserMsg("Book was added")
   renderBooks()
 }
 
 function onAddBookFromModal() {
   const elAddBook = document.querySelector(".add-book-modal")
   const title = document.querySelector(".book-title-input").value
-  const price = +document.querySelector(".book-price-input").value 
+  const price = +document.querySelector(".book-price-input").value
 
   if (!title || price <= 0) {
     alert("Please enter a valid title and a positive price.")
@@ -153,6 +165,7 @@ function onAddBookFromModal() {
   showUserMsg("Book was added")
   elAddBook.style.display = "none"
   renderBooks()
+  resetAddBookModal()
 }
 
 function onCancelAddModal() {
@@ -275,6 +288,12 @@ function onPrevPage() {
   setQueryParams()
 }
 
+function onGoToPage(pageIdx) {
+  gQueryOptions.page.idx = pageIdx
+  renderBooks()
+  setQueryParams()
+}
+
 // Query Params
 
 function readQueryParams() {
@@ -305,7 +324,7 @@ function readQueryParams() {
 
 function renderQueryParams() {
   const queryParams = new URLSearchParams(window.location.search)
-  
+
   const elRange = document.querySelector('.filter-by input[type="range"]')
   if (elRange) elRange.value = gQueryOptions.filterBy.rating
   const elText = document.querySelector('.filter-by input[type="text"]')
@@ -324,7 +343,6 @@ function renderQueryParams() {
 
   if (!isNaN(pageIdx)) gQueryOptions.page.idx = pageIdx
   if (!isNaN(pageSize)) gQueryOptions.page.size = pageSize
-
 }
 
 function setQueryParams() {

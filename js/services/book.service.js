@@ -3,21 +3,14 @@
 var gBooks
 const STORAGE_KEY = "booksDB"
 
-// var gBooks = [
-//   { id: 1, title: "The Adventure of Lori Ipsi", price: 120 },
-//   { id: 2, title: "World Atlas", price: 300 },
-//   { id: 3, title: "Zorba The Greek", price: 87 },
-// ]
-
 function getBooks(options) {
   const filterBy = options.filterBy
-
   const sortBy = options.sortBy
-
   const page = options.page
 
   var books = gBooks
 
+  // Filter
   if (filterBy.txt) {
     books = books.filter((book) =>
       book.title.toLowerCase().includes(filterBy.txt.toLowerCase())
@@ -27,21 +20,21 @@ function getBooks(options) {
     books = books.filter((book) => book.rating >= filterBy.rating)
   }
 
-  if(sortBy.title){
+  // Sorting
+  if (sortBy.title) {
     const sortDir = sortBy.title
-    books = books.toSorted((b1,b2) => b1.title.localeCompare(b2.title) * sortDir)
-  }
-
-  if (sortBy.rating){
+    books = books.toSorted(
+      (b1, b2) => b1.title.localeCompare(b2.title) * sortDir
+    )
+  } else if (sortBy.rating) {
     const sortDir = sortBy.rating
     books = books.toSorted((b1, b2) => (b1.rating - b2.rating) * sortDir)
-  }
-
-  if (sortBy.price){
+  } else if (sortBy.price) {
     const sortDir = sortBy.price
     books = books.toSorted((b1, b2) => (b1.price - b2.price) * sortDir)
   }
 
+  // Pages
   const startIdx = page.idx * page.size
   books = books.slice(startIdx, startIdx + page.size)
 
@@ -66,7 +59,7 @@ function updatePrice(bookId, newPrice) {
 }
 
 function updateBook(bookId, title, price) {
-  const book = gBooks.find(book => book.id === bookId)
+  const book = gBooks.find((book) => book.id === bookId)
   if (!book) return null
 
   book.title = title
@@ -91,13 +84,13 @@ function _createBooks() {
       _createBook("The Adventure of Lori Ipsi", 120),
       _createBook("World Atlas", 300, "img/atlas.jpg"),
       _createBook("Zorba The Greek", 87, "img/zobra.jpg"),
-      _createBook('Hary Potter 1', 200, 'img/HaryPotter1.jpg'),
-      _createBook('Hary Potter 2', 150, 'img/HaryPotter2.jpg'),
-      _createBook('Hary Potter 3', 100,'img/HaryPotter3.jpg' ),
-      _createBook('Hary Potter 4', 300,'img/HaryPotter4.jpg' ),
-      _createBook('Hary Potter 5', 175, 'img/HaryPotter5.jpg'),
-      _createBook('Hary Potter 6', 80, 'img/HaryPotter6.jpg'),
-      _createBook('Hary Potter 7', 1250, 'img/HaryPotter7.jpg')
+      _createBook("Hary Potter 1", 200, "img/HaryPotter1.jpg"),
+      _createBook("Hary Potter 2", 150, "img/HaryPotter2.jpg"),
+      _createBook("Hary Potter 3", 100, "img/HaryPotter3.jpg"),
+      _createBook("Hary Potter 4", 300, "img/HaryPotter4.jpg"),
+      _createBook("Hary Potter 5", 175, "img/HaryPotter5.jpg"),
+      _createBook("Hary Potter 6", 80, "img/HaryPotter6.jpg"),
+      _createBook("Hary Potter 7", 1250, "img/HaryPotter7.jpg"),
     ]
     _saveBooks()
   }
@@ -143,9 +136,7 @@ function getPageCount(options) {
   const page = options.page
   const filterBy = options.filterBy
 
-
   const books = _filterBooks(filterBy)
-
   const pageCount = Math.ceil(books.length / page.size)
 
   return pageCount
@@ -155,17 +146,15 @@ function _filterBooks(filterBy) {
   var books = gBooks
 
   if (filterBy.txt) {
-      books = books.filter(book => book.title.includes(filterBy.txt))
+    books = books.filter((book) => book.title.includes(filterBy.txt))
   }
   if (filterBy.rating) {
-      books = books.filter(book => book.rating >= filterBy.rating)
+    books = books.filter((book) => book.rating >= filterBy.rating)
   }
   return books
 }
 
-// TODO
 function resetAddBookModal() {
-  const title = document.querySelector(".book-title-input").value = ''
-  const price = document.querySelector(".book-price-input").value = ''
+  const title = (document.querySelector(".book-title-input").value = "")
+  const price = (document.querySelector(".book-price-input").value = "")
 }
-

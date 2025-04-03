@@ -25,10 +25,12 @@ table {
 
 th,
 td {
+  width: 20%;
   border: 1px solid black;
   padding: 8px;
   text-align: left;
 }
+
 th {
   background-color: rgb(155 116 165);
 }
@@ -161,6 +163,11 @@ tbody {
   margin-bottom: 10px;
 }
 
+.book-filter {
+  width: 100%;
+  place-items: center;
+}
+
 .add-book {
   margin-top: 10px;
   padding: 10px;
@@ -193,7 +200,6 @@ tbody {
 
 .filter-by{
   padding: 10px;
-  margin: 10px;
 }
 
 .book-filter{
@@ -238,4 +244,16 @@ tbody {
   background-color: #f44336;
   color: white;
 }
+
+.page-btn.active {
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+}
+
+.page-numbers{
+  place-self: center;
+}
+
+
 
